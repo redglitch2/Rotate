@@ -4,8 +4,6 @@
     panel.className = 'gpdr-panel';
     panel.innerHTML = `
       <button class="gpdr-btn" data-dir="left" title="Rotate left">⟲</button>
-      <button class="gpdr-btn" data-dir="right" title="Rotate right">⟳</button>
-      <button class="gpdr-btn" data-dir="reset" title="Reset">⟲⟳</button>
     `;
     return panel;
   }
