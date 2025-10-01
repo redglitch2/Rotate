@@ -40,7 +40,7 @@
     });
   }
 
-  function injectOnce(dialog) {
+  function injectOnce(dialog, attempt = 0) {
     if (dialog.querySelector('.gpdr-panel')) return;
     const panel = createControlPanel();
     dialog.appendChild(panel);
@@ -69,6 +69,11 @@
       rotate(dir);
       e.stopPropagation();
     });
+
+    // Retry if no preview found, up to 5 times
+    if (!getTarget() && attempt < 5) {
+      setTimeout(() => injectOnce(dialog, attempt + 1), 500);
+    }
   }
 
   const observer = new MutationObserver((muts) => {
@@ -93,4 +98,14 @@
 
   const existingDialog = document.querySelector('[role="dialog"]');
   if (existingDialog) injectOnce(existingDialog);
+
+  // Periodically scan for dialogs and inject controls if missing
+  setInterval(() => {
+    const dialogs = document.querySelectorAll('[role="dialog"]');
+    dialogs.forEach(dialog => {
+      if (!dialog.querySelector('.gpdr-panel')) {
+        injectOnce(dialog);
+      }
+    });
+  }, 1000);
 })();
